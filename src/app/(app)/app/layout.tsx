@@ -1,3 +1,4 @@
+import AppHeader from "@/components/app-header";
 import AppSidebar from "@/components/app-sidebar";
 
 export default async function DashboardLayout({
@@ -7,11 +8,14 @@ export default async function DashboardLayout({
 }) {
   return (
     <>
-      <div className="flex w-full h-full">
-        <div className="fixed left-0 top-0 hidden lg:block lg:w-[256px] h-full overflow-y-auto">
-          <AppSidebar />
+      <div className="flex flex-col min-h-screen">
+        <div className="flex justify-center items-center min-h-10 bg-blue-100">
+          <AppHeader />
         </div>
-        <div>{children}</div>
+        <div className="flex ">
+          <AppSidebar />
+          <main className="flex-1">{children}</main>
+        </div>
       </div>
     </>
   );

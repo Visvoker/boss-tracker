@@ -10,7 +10,7 @@ export default function Home() {
           <p className="text-xl font-bold text-gray-800">Welcome BossTracker!</p>
           <div className="mt-5">
             <Button asChild className="">
-              <Link href="/main">Get started</Link>
+              <Link href="/app/home">Get started</Link>
             </Button>
           </div>
         </div>
