@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "BossTracker",
   description: "BossTracker",
+  icons: [
+    {
+      url: "/logo.svg",
+      href: "/logo.svg",
+    },
+  ],
 };
 
 export default function RootLayout({
