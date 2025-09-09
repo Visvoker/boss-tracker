@@ -12,7 +12,7 @@ export default function Home() {
           </p>
           <div className="mt-5">
             <Button asChild className="">
-              <Link href="/home">Get started</Link>
+              <Link href="/sign-up">Get started</Link>
             </Button>
           </div>
         </div>
