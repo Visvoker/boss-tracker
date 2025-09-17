@@ -7,7 +7,13 @@ export default async function PlatformLayout({
 }) {
   return (
     <>
-      <ClerkProvider>{children}</ClerkProvider>
+      <ClerkProvider
+        appearance={{
+          cssLayerName: "clerk",
+        }}
+      >
+        {children}
+      </ClerkProvider>
     </>
   );
 }
