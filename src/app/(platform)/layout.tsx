@@ -1,4 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 
 export default async function PlatformLayout({
   children,
@@ -12,6 +13,7 @@ export default async function PlatformLayout({
           cssLayerName: "clerk",
         }}
       >
+        <Toaster />
         {children}
       </ClerkProvider>
     </>

@@ -19,7 +19,7 @@ type FormSubmitProps = {
     | "primary";
 };
 
-export default function FormSubmit({
+export function FormSubmit({
   children,
   className,
   disabled,
