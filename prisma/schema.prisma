@@ -14,8 +14,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Board {
-  id String @id @default(uuid())
+model Boss {
+  id            String @id @default(cuid())
+  name          String @unique
+  imageUrl      String @unique
+  minRespawnMin Int
+  maxRespawnMin Int
 
-  title String
+  logs BossLog[]
+
+  @@index([name])
+}
+
+model BossLog {
+  id        String    @id @default(cuid())
+  orgId     String
+  bossId    String
+  channel   Int
+  killedAt  DateTime  @default(now())
+  clearedAt DateTime?
+
+  boss Boss @relation(fields: [bossId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([orgId, bossId, channel, killedAt])
+  @@index([orgId, bossId, channel, clearedAt])
 }

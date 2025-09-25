@@ -6,5 +6,5 @@ export const CreateBoard = z.object({
       error: (issue) =>
         issue.input === undefined ? "Title is required" : "Not a string",
     })
-    .min(3, { error: "Title is too short." }),
+    .min(1, { error: "Title is required" }),
 });

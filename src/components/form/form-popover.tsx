@@ -55,7 +55,7 @@ export function FormPopover({
         sideOffset={sideOffset}
       >
         <div className="text-sm font-medium text-center text-neutral-600 pb-4">
-          Create board
+          Create tracker
         </div>
         <PopoverClose asChild>
           <Button
@@ -69,7 +69,7 @@ export function FormPopover({
           <div className="space-y-4">
             <FormInput
               id="title"
-              label="Board title"
+              label="Channel "
               type="text"
               errors={fieldErrors}
             />
