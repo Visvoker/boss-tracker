@@ -96,7 +96,7 @@ export function NavItem({
             )}
             onClick={() => onClick(route.href)}
           >
-            <div className="pl-10 flex items-center justify-center">
+            <div className="pl-6 flex items-center justify-center">
               {route.icon}
               {route.label}
             </div>

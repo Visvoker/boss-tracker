@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -29,12 +29,12 @@ model Boss {
 model BossLog {
   id        String    @id @default(cuid())
   orgId     String
-  bossId    String
   channel   Int
   killedAt  DateTime  @default(now())
   clearedAt DateTime?
 
-  boss Boss @relation(fields: [bossId], references: [id], onDelete: Cascade)
+  bossId String
+  boss   Boss   @relation(fields: [bossId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
