@@ -34,9 +34,10 @@ export async function BossList() {
       minute: "2-digit",
     });
   }
+  // xs:[grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]
 
   return (
-    <div className="grid xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 m-3">
+    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 m-3">
       {" "}
       {bosslogs.map((bosslog) => (
         <div
