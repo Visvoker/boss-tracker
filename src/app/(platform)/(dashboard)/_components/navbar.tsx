@@ -1,10 +1,24 @@
+import { Plus } from "lucide-react";
+import { redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { getBosses } from "@/server/get-bosses";
+import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+
 import Logo from "@/components/logo";
 import { Button } from "@/components/ui/button";
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
-import { Plus } from "lucide-react";
+import { FormPopover } from "@/components/form/form-popover";
+
 import MobileSidebar from "./mobile-sidebar";
 
-export function Navbar() {
+export async function Navbar() {
+  const { orgId } = await auth();
+
+  if (!orgId) {
+    redirect("/select-org");
+  }
+
+  const bosses = await getBosses();
+
   return (
     <nav className="fixed z-50 top-0 px-4 w-full h-14 border-b shadow-sm bg-white flex items-center">
       <MobileSidebar />
@@ -12,13 +26,20 @@ export function Navbar() {
         <div className="hidden md:flex">
           <Logo />
         </div>
-        <Button
-          size="sm"
-          variant="primary"
-          className="rounded-sm hidden md:block h-auto py-1.5 px-2"
+        <FormPopover
+          bosses={bosses}
+          align="start"
+          side="bottom"
+          sideOffset={18}
         >
-          Create
-        </Button>
+          <Button
+            size="sm"
+            variant="primary"
+            className="rounded-sm hidden md:block h-auto py-1.5 px-2"
+          >
+            Create
+          </Button>
+        </FormPopover>
         <Button
           size="sm"
           variant="primary"

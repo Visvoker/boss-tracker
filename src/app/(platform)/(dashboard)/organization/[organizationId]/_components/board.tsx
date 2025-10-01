@@ -1,10 +1,10 @@
-import { User2 } from "lucide-react";
+import { AlarmClockPlus, User2 } from "lucide-react";
 import { redirect } from "next/navigation";
-
 import { auth } from "@clerk/nextjs/server";
+import { getBosses } from "@/server/get-bosses";
+
 import { BossList } from "./boss-list";
 import { FormPopover } from "@/components/form/form-popover";
-import { db } from "@/lib/db";
 
 export default async function Board() {
   const { orgId } = await auth();
@@ -13,16 +13,18 @@ export default async function Board() {
     redirect("/select-org");
   }
 
-  const bosses = await db.boss.findMany({
-    select: { id: true, name: true, imageUrl: true },
-    orderBy: { name: "asc" },
-  });
+  const bosses = await getBosses();
 
   return (
     <div className="space-y-4 w-full">
-      <div className="flex items-center font-semibold text-lg text-neutral-700">
-        <User2 className="h-6 w-6 mr-2" />
-        Your Board
+      <div className="flex items-center font-semibold text-lg text-neutral-700 gap-x-2">
+        <User2 className="h-5 w-5" />
+        <p className="font-semibold">Your Board</p>
+        <FormPopover bosses={bosses} sideOffset={10} side="bottom">
+          <div className="hover:opacity-50 transition cursor-pointer">
+            <AlarmClockPlus className="h-8 w-8 text-sky-700 ml-2" />
+          </div>
+        </FormPopover>
       </div>
       <div>
         <div className="border rounded-sm">
@@ -30,11 +32,6 @@ export default async function Board() {
           <BossList />
         </div>
       </div>{" "}
-      <FormPopover bosses={bosses} sideOffset={10} side="bottom">
-        <div className="h-20 w-50 bg-muted rounded-sm flex gap-y-1 items-center justify-center hover:opacity-75 transition">
-          <p className="text-sm">Create tracker</p>
-        </div>
-      </FormPopover>
     </div>
   );
 }

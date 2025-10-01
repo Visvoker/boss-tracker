@@ -122,6 +122,10 @@ export function FormPopover({
               label="Channel"
               type="number"
               errors={fieldErrors}
+              className="
+              [&::-webkit-outer-spin-button]:appearance-none
+              [&::-webkit-inner-spin-button]:appearance-none
+              "
             />
             <FormSubmit className="w-full" disabled={!selectedBossId}>
               Create
