@@ -10,6 +10,7 @@ import { deleteChannel } from "@/actions/delete-boss";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
+import { updateChannel } from "@/actions/update-boss";
 
 type BossLogWithBoss = Prisma.BossLogGetPayload<{ include: { boss: true } }>;
 
@@ -47,17 +48,33 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
     setIsMounted(true);
   }, []);
 
-  const { execute, isLoading } = useAction(deleteChannel, {
-    onSuccess: () => {
-      toast.success("Boss deleted!");
-    },
-    onError: (error) => {
-      toast.error(error);
-    },
-  });
+  const { execute: doDelete, isLoading: deleteLoading } = useAction(
+    deleteChannel,
+    {
+      onSuccess: () => {
+        toast.success("Boss deleted!");
+      },
+      onError: (error) => {
+        toast.error(error);
+      },
+    }
+  );
 
   const onDelete = () => {
-    execute({ id: bosslogId });
+    doDelete({ id: bosslogId });
+  };
+
+  const { execute: doUpdate, isLoading: updateLoading } = useAction(
+    updateChannel,
+    {
+      onSuccess: () => {
+        toast.success("Boss rotated!");
+      },
+    }
+  );
+
+  const onUpdate = () => {
+    doUpdate({ id: bosslogId });
   };
 
   if (!isMounted) {
@@ -88,6 +105,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
             <Hourglass className="h-3 w-3" />
             {formatTime(respawnStart)}~{formatTime(respawnEnd)}
           </div>
+
           {/* 燈號 */}
           <div className="mt-1 flex items-center gap-x-2 text-xs">
             <span
@@ -104,8 +122,8 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {}}
-            // disabled={}
+            onClick={onUpdate}
+            disabled={updateLoading}
             title="從現在重新計時"
           >
             <RotateCcw className="h-4 w-4" />
@@ -116,7 +134,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
           variant="ghost"
           size="sm"
           onClick={onDelete}
-          disabled={isLoading}
+          disabled={deleteLoading}
           className="cursor-pointer"
         >
           <Trash2 className="h-4 w-4" />

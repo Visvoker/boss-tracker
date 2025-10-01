@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { createSafeAction } from "@/lib/create-safe-action";
 
-import { DeleteChannel } from "./schema";
+import { UpdateChannel } from "./schema";
 import { InputType, ReturnType } from "./type";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
@@ -21,15 +21,15 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   let bossLog;
 
   try {
-    bossLog = await db.bossLog.delete({
-      where: {
-        orgId,
-        id,
+    bossLog = await db.bossLog.update({
+      where: { id },
+      data: {
+        createdAt: new Date(),
       },
     });
   } catch (_error) {
     return {
-      error: "Failed to delete.",
+      error: "Failed to update.",
     };
   }
 
@@ -37,4 +37,4 @@ const handler = async (data: InputType): Promise<ReturnType> => {
   return { data: bossLog };
 };
 
-export const deleteChannel = createSafeAction(DeleteChannel, handler);
+export const updateChannel = createSafeAction(UpdateChannel, handler);

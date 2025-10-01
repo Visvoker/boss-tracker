@@ -1,4 +1,4 @@
-import { Plus } from "lucide-react";
+import { AlarmClockPlus } from "lucide-react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getBosses } from "@/server/get-bosses";
@@ -35,9 +35,10 @@ export async function Navbar() {
           <Button
             size="sm"
             variant="primary"
-            className="rounded-sm hidden md:block h-auto py-1.5 px-2"
+            className="rounded-sm hidden md:inline-flex h-auto py-1.5 px-2 cursor-pointer"
           >
-            Create
+            <span>Create</span>
+            <AlarmClockPlus className="h-4 w-4" />
           </Button>
         </FormPopover>
         <Button
@@ -45,7 +46,7 @@ export async function Navbar() {
           variant="primary"
           className="rounded-sm block md:hidden"
         >
-          <Plus className="h-4 w-4" />
+          <AlarmClockPlus className="h-4 w-4" />
         </Button>
       </div>
       <div className="ml-auto flex items-center gap-x-2">
