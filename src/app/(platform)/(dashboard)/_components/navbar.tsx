@@ -35,7 +35,7 @@ export async function Navbar() {
           <Button
             size="sm"
             variant="primary"
-            className="rounded-sm hidden md:inline-flex h-auto py-1.5 px-2 cursor-pointer"
+            className="rounded-sm hidden md:inline-flex h-auto py-1.5 px-2"
           >
             <span>Create</span>
             <AlarmClockPlus className="h-4 w-4" />

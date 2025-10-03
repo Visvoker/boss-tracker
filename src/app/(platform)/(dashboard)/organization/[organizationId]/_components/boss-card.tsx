@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { updateChannel } from "@/actions/update-boss";
 import { useRespawn } from "@/hooks/use-respawn";
+import { BossDeleteConfirm } from "./boss-delete-confirm";
 
 type BossLogWithBoss = Prisma.BossLogGetPayload<{ include: { boss: true } }>;
 
@@ -107,21 +108,14 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
             onClick={onUpdate}
             disabled={updateLoading}
             title="從現在重新計時"
-            className="cursor-pointer"
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
         )}
 
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onDelete}
-          disabled={deleteLoading}
-          className="cursor-pointer"
-        >
+        <BossDeleteConfirm onConfirm={onDelete} disabled={deleteLoading}>
           <Trash2 className="h-4 w-4" />
-        </Button>
+        </BossDeleteConfirm>
       </div>
     </div>
   );
