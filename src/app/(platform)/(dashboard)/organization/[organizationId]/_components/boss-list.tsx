@@ -9,6 +9,27 @@ type BossListProps = {
   bosslogs: Serialized<BossLogWithBoss>[];
 };
 
+const Section = ({
+  title,
+  data,
+}: {
+  title: string;
+  data: BossLogWithBoss[];
+}) => {
+  if (data.length === 0) return null;
+
+  return (
+    <div>
+      <p className="font-semibold text-lg my-3">{title}</p>
+      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+        {data.map((b) => (
+          <BossCard key={b.id} bosslog={b} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export function BossList({ bosslogs }: BossListProps) {
   const normalized = bosslogs.map((b) => ({
     ...b,
@@ -20,40 +41,9 @@ export function BossList({ bosslogs }: BossListProps) {
 
   return (
     <div className="ml-3">
-      {ready.length > 0 && (
-        <div>
-          <p className="font-semibold text-lg my-3">已重生Boss</p>
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-            {ready.map((b) => (
-              <BossCard key={b.id} bosslog={b} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {maybe.length > 0 && (
-        <div>
-          <div>
-            <p className="font-semibold text-lg my-3">可能重生Boss</p>
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-              {maybe.map((b) => (
-                <BossCard key={b.id} bosslog={b} />
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {notYet.length > 0 && (
-        <div>
-          <p className="font-semibold text-lg my-3">未重生Boss</p>
-          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
-            {notYet.map((b) => (
-              <BossCard key={b.id} bosslog={b} />
-            ))}
-          </div>
-        </div>
-      )}
+      <Section title="已重生Boss" data={ready} />
+      <Section title="可能重生Boss" data={maybe} />
+      <Section title="未重生Boss" data={notYet} />
     </div>
   );
 }

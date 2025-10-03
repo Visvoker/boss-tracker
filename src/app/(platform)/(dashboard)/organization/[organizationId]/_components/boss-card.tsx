@@ -9,7 +9,7 @@ import { useAction } from "@/hooks/use-actions";
 import { deleteChannel } from "@/actions/delete-boss";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { updateChannel } from "@/actions/update-boss";
 import { useRespawn } from "@/hooks/use-respawn";
 
