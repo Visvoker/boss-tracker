@@ -27,11 +27,9 @@ model Boss {
 }
 
 model BossLog {
-  id        String    @id @default(cuid())
-  orgId     String
-  channel   Int
-  killedAt  DateTime  @default(now())
-  clearedAt DateTime?
+  id      String @id @default(cuid())
+  orgId   String
+  channel Int
 
   bossId String
   boss   Boss   @relation(fields: [bossId], references: [id], onDelete: Cascade)
@@ -39,6 +37,6 @@ model BossLog {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([orgId, bossId, channel, killedAt])
-  @@index([orgId, bossId, channel, clearedAt])
+  // 依你的查詢習慣調整 index；通常看板會用 createdAt 排序
+  @@index([orgId, bossId, channel, createdAt])
 }

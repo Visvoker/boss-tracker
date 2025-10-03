@@ -5,6 +5,14 @@ import { getBosses } from "@/server/get-bosses";
 
 import { BossList } from "./boss-list";
 import { FormPopover } from "@/components/form/form-popover";
+import { db } from "@/lib/db";
+import { Prisma } from "@/generated/prisma";
+import { Serialized } from "@/types/serialized";
+
+const bossLogWithBoss = Prisma.validator<Prisma.BossLogDefaultArgs>()({
+  include: { boss: true },
+});
+type BossLogWithBoss = Prisma.BossLogGetPayload<typeof bossLogWithBoss>;
 
 export default async function Board() {
   const { orgId } = await auth();
@@ -14,9 +22,22 @@ export default async function Board() {
   }
 
   const bosses = await getBosses();
+  const bossLogQuery = (orgId: string) =>
+    Prisma.validator<Prisma.BossLogFindManyArgs>()({
+      where: { orgId },
+      include: { boss: true },
+      orderBy: [{ bossId: "asc" }, { createdAt: "desc" }],
+    });
+
+  const raw = await db.bossLog.findMany(bossLogQuery(orgId)); // BossLogWithBoss[]
+  const bosslogs = raw.map((b) => ({
+    ...b,
+    createdAt: b.createdAt.toISOString(),
+    updatedAt: b.updatedAt.toISOString(),
+  })) satisfies Serialized<BossLogWithBoss>[];
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-2 w-full">
       <div className="flex items-center font-semibold text-lg text-neutral-700 gap-x-2">
         <User2 className="h-5 w-5" />
         <p className="font-semibold">Your Board</p>
@@ -27,11 +48,8 @@ export default async function Board() {
         </FormPopover>
       </div>
       <div>
-        <div className="border rounded-sm">
-          <p className="font-semibold text-lg ml-3 my-3">即將重生的 Boss</p>
-          <BossList />
-        </div>
-      </div>{" "}
+        <BossList bosslogs={bosslogs} />
+      </div>
     </div>
   );
 }

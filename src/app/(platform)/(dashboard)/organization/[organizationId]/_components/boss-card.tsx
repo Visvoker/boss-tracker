@@ -11,43 +11,18 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
 import { updateChannel } from "@/actions/update-boss";
+import { useRespawn } from "@/hooks/use-respawn";
 
 type BossLogWithBoss = Prisma.BossLogGetPayload<{ include: { boss: true } }>;
 
 export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
-  const bosslogId = bosslog.id;
-  const minMin = bosslog.boss.minRespawnMin;
-  const maxMin = bosslog.boss.maxRespawnMin;
-  const [now, setNow] = useState(() => new Date());
-
-  const baseTime = useMemo(
-    () => new Date(bosslog.createdAt),
-    [bosslog.createdAt]
-  );
-
-  const respawnStart = new Date(baseTime.getTime() + minMin * 60_000);
-  const respawnEnd = new Date(baseTime.getTime() + maxMin * 60_000);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      if (document.visibilityState === "visible") setNow(new Date());
-    }, 30_000); // 30_000 = 30 秒
-    return () => clearInterval(id);
-  }, []);
-
-  type Lamp = "red" | "yellow" | "green";
-  const lamp: Lamp =
-    now < respawnStart ? "red" : now <= respawnEnd ? "yellow" : "green";
-
-  const lampClass =
-    lamp === "red"
-      ? "bg-red-500"
-      : lamp === "yellow"
-      ? "bg-yellow-500"
-      : "bg-green-500";
-
-  const lampText =
-    lamp === "red" ? "未重生" : lamp === "yellow" ? "可能重生" : "已重生";
+  const {
+    start: respawnStart,
+    end: respawnEnd,
+    lamp: lamp,
+    className: lampClass,
+    text: lampText,
+  } = useRespawn(bosslog);
 
   const [isMounted, setIsMounted] = useState(false);
 
@@ -68,7 +43,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
   );
 
   const onDelete = () => {
-    doDelete({ id: bosslogId });
+    doDelete({ id: bosslog.id });
   };
 
   const { execute: doUpdate, isLoading: updateLoading } = useAction(
@@ -81,7 +56,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
   );
 
   const onUpdate = () => {
-    doUpdate({ id: bosslogId });
+    doUpdate({ id: bosslog.id });
   };
 
   if (!isMounted) {
@@ -104,7 +79,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
           <div className="flex items-center ">
             <p className="mr-2 truncate">{bosslog.boss.name}</p>
             <p className="text-sm text-muted-foreground truncate">頻道:</p>
-            <p className="text-sm text-muted-foreground break-words">
+            <p className="text-sm font-semibold text-sky-800 break-words ml-0.5">
               {bosslog.channel}
             </p>
           </div>
@@ -124,7 +99,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
         </div>
       </div>
 
-      <div className="flex items-center text-xs text-muted-foreground">
+      <div className="flex flex-col items-center text-xs text-muted-foreground">
         {(lamp === "yellow" || lamp === "green") && (
           <Button
             variant="ghost"
@@ -132,6 +107,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
             onClick={onUpdate}
             disabled={updateLoading}
             title="從現在重新計時"
+            className="cursor-pointer"
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
