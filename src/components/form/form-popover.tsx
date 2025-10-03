@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import { X } from "lucide-react";
@@ -38,14 +38,14 @@ export function FormPopover({
   sideOffset = 0,
 }: FormPopoverProps) {
   const [selectedBossId, setSelectedBossId] = useState<string>("");
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const { execute, fieldErrors } = useAction(createChannel, {
     onSuccess: (data) => {
-      console.log({ data });
       toast.success("Boss created!");
+      closeRef.current?.click();
     },
     onError: (error) => {
-      console.log({ error });
       toast.error(error);
     },
   });
@@ -106,7 +106,7 @@ export function FormPopover({
             ))}
           </ToggleGroup>
         </div>
-        <PopoverClose asChild>
+        <PopoverClose ref={closeRef} asChild>
           <Button
             className="h-auto w-auto p-2 absolute top-2 right-2"
             variant="ghost"

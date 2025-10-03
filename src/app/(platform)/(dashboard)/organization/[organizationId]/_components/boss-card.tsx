@@ -16,17 +16,24 @@ type BossLogWithBoss = Prisma.BossLogGetPayload<{ include: { boss: true } }>;
 
 export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
   const bosslogId = bosslog.id;
+  const minMin = bosslog.boss.minRespawnMin;
+  const maxMin = bosslog.boss.maxRespawnMin;
+  const [now, setNow] = useState(() => new Date());
+
   const baseTime = useMemo(
     () => new Date(bosslog.createdAt),
     [bosslog.createdAt]
   );
-  const minMin = bosslog.boss.minRespawnMin;
-  const maxMin = bosslog.boss.maxRespawnMin;
 
   const respawnStart = new Date(baseTime.getTime() + minMin * 60_000);
   const respawnEnd = new Date(baseTime.getTime() + maxMin * 60_000);
 
-  const now = new Date();
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (document.visibilityState === "visible") setNow(new Date());
+    }, 30_000); // 30_000 = 30 秒
+    return () => clearInterval(id);
+  }, []);
 
   type Lamp = "red" | "yellow" | "green";
   const lamp: Lamp =
@@ -40,7 +47,7 @@ export function BossCard({ bosslog }: { bosslog: BossLogWithBoss }) {
       : "bg-green-500";
 
   const lampText =
-    lamp === "red" ? "未重生" : lamp === "yellow" ? "準備重生" : "已重生";
+    lamp === "red" ? "未重生" : lamp === "yellow" ? "可能重生" : "已重生";
 
   const [isMounted, setIsMounted] = useState(false);
 
